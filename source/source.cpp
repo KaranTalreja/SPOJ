@@ -114,7 +114,7 @@ node* heapMax::extractMax(void)
 	while(2*parent < size)
 	{
 		child = (heap[(2*parent)-1]->data >= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
-		if(heap[child-1] > heap[parent-1])
+		if(heap[child-1]->data > heap[parent-1]->data)
 		{
 			tempEdge = heap[child -1];
 			heap[child - 1] = heap[parent - 1];
@@ -131,6 +131,7 @@ node* heapMax::extractMax(void)
 void heapMax::deleteNode(node* del)
 {
 	node* tempEdge;
+	int parent = del->indexInHeap + 1;
 	tempEdge = heap[del->indexInHeap];
 	heap[del->indexInHeap] = heap[size-1];
 	heap[del->indexInHeap]->indexInHeap = del->indexInHeap;
@@ -138,17 +139,14 @@ void heapMax::deleteNode(node* del)
 	heap[size-1]->indexInHeap = size-1;
 	vector<node*> :: iterator itr = heap.begin();
 	itr = itr + size -1;
+	size--;
 	(*itr)->indexInHeap = 0;
 	heap.erase(itr);
-	size--;
-	if(del->indexInHeap)
-	{
-	int parent = del->indexInHeap;
 	int child = parent;
 	while(2*parent < size)
 	{
 		child = (heap[(2*parent)-1]->data >= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
-		if(heap[child-1] > heap[parent-1])
+		if(heap[child-1]->data > heap[parent-1]->data)
 		{
 			tempEdge = heap[child -1];
 			heap[child - 1] = heap[parent - 1];
@@ -159,7 +157,6 @@ void heapMax::deleteNode(node* del)
 		}
 		else
 			break;
-	}
 	}
 }
 void heapMax::decompile()
