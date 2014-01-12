@@ -57,18 +57,18 @@ int main()
 		}
 		else
 			heap.insert(array[i+k-1]);
-//		cout<<"Initial: ";heap.decompile();
+		//cout<<"Initial: ";heap.decompile();
 		returnNode = heap.extractMax();
 		if(i != N-k)
 		cout<<returnNode->data<<" ";
 		else
 			cout<<returnNode->data;
-//		cout<<"After Max: ";heap.decompile();
+		//cout<<"After Max: ";heap.decompile();
 
 		heap.insert(returnNode);
-//		cout<<"After ReInsertion: ";heap.decompile();
+		//cout<<"After ReInsertion: ";heap.decompile();
 		heap.deleteNode(array[i]);
-//		cout<<"After Deletion: ";heap.decompile();
+		//cout<<"After Deletion: ";heap.decompile();
 	}
 
 	return 0;
@@ -111,8 +111,10 @@ node* heapMax::extractMax(void)
 	size--;
 	int parent = 1;
 	int child = parent;
-	while(2*parent < size)
+	while(2*parent <= size)
 	{
+		if(2*parent != size)
+		{
 		child = (heap[(2*parent)-1]->data >= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
 		if(heap[child-1]->data > heap[parent-1]->data)
 		{
@@ -125,6 +127,22 @@ node* heapMax::extractMax(void)
 		}
 		else
 			break;
+		}
+		else
+		{
+			child = 2*parent;
+			if(heap[child-1]->data > heap[parent-1]->data)
+			{
+				tempEdge = heap[child -1];
+				heap[child - 1] = heap[parent - 1];
+				heap[child-1]->indexInHeap = child-1;
+				heap[parent - 1] = tempEdge;
+				heap[parent-1]->indexInHeap = parent-1;
+				parent = child;
+			}
+			else
+				break;
+		}
 	}
 	return retVal;
 }
@@ -140,11 +158,12 @@ void heapMax::deleteNode(node* del)
 	vector<node*> :: iterator itr = heap.begin();
 	itr = itr + size -1;
 	size--;
-	(*itr)->indexInHeap = 0;
-	heap.erase(itr);
+
 	int child = parent;
-	while(2*parent < size)
+	while(2*parent <= size)
 	{
+		if(2*parent != size)
+		{
 		child = (heap[(2*parent)-1]->data >= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
 		if(heap[child-1]->data > heap[parent-1]->data)
 		{
@@ -157,7 +176,25 @@ void heapMax::deleteNode(node* del)
 		}
 		else
 			break;
+		}
+		else
+		{
+			child = 2*parent;
+			if(heap[child-1]->data > heap[parent-1]->data)
+			{
+				tempEdge = heap[child -1];
+				heap[child - 1] = heap[parent - 1];
+				heap[child-1]->indexInHeap = child-1;
+				heap[parent - 1] = tempEdge;
+				heap[parent-1]->indexInHeap = parent-1;
+				parent = child;
+			}
+			else
+				break;
+		}
 	}
+	(*itr)->indexInHeap = 0;
+	heap.erase(itr);
 }
 void heapMax::decompile()
 {
