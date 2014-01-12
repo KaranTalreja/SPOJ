@@ -57,20 +57,19 @@ int main()
 		}
 		else
 			heap.insert(array[i+k-1]);
-		//cout<<"Initial: ";heap.decompile();
 		returnNode = heap.extractMax();
 		if(i != N-k)
 		cout<<returnNode->data<<" ";
 		else
 			cout<<returnNode->data;
-		//cout<<"After Max: ";heap.decompile();
-
 		heap.insert(returnNode);
-		//cout<<"After ReInsertion: ";heap.decompile();
 		heap.deleteNode(array[i]);
-		//cout<<"After Deletion: ";heap.decompile();
 	}
 
+	for(int i=0;i<N;i++)
+	{
+		delete array[i];
+	}
 	return 0;
 }
 
