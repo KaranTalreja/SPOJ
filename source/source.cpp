@@ -62,7 +62,6 @@ int main()
 		cout<<returnNode->data<<" ";
 		else
 			cout<<returnNode->data;
-		heap.insert(returnNode);
 		heap.deleteNode(array[i]);
 	}
 
@@ -97,53 +96,7 @@ void heapMax::insert(node* Edge)
 
 node* heapMax::extractMax(void)
 {
-	node* retVal = heap[0],*tempEdge;
-	tempEdge = heap[0];
-	heap[0] = heap[size-1];
-	heap[0]->indexInHeap = 0;
-	heap[size-1] = tempEdge;
-	heap[size-1]->indexInHeap = size-1;
-	vector<node*> :: iterator itr = heap.begin();
-	itr = itr + size -1;
-	(*itr)->indexInHeap=0;
-	heap.erase(itr);
-	size--;
-	int parent = 1;
-	int child = parent;
-	while(2*parent <= size)
-	{
-		if(2*parent != size)
-		{
-		child = (heap[(2*parent)-1]->data >= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
-		if(heap[child-1]->data > heap[parent-1]->data)
-		{
-			tempEdge = heap[child -1];
-			heap[child - 1] = heap[parent - 1];
-			heap[child-1]->indexInHeap = child-1;
-			heap[parent - 1] = tempEdge;
-			heap[parent-1]->indexInHeap = parent-1;
-			parent = child;
-		}
-		else
-			break;
-		}
-		else
-		{
-			child = 2*parent;
-			if(heap[child-1]->data > heap[parent-1]->data)
-			{
-				tempEdge = heap[child -1];
-				heap[child - 1] = heap[parent - 1];
-				heap[child-1]->indexInHeap = child-1;
-				heap[parent - 1] = tempEdge;
-				heap[parent-1]->indexInHeap = parent-1;
-				parent = child;
-			}
-			else
-				break;
-		}
-	}
-	return retVal;
+	return heap[0];
 }
 void heapMax::deleteNode(node* del)
 {
