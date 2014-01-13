@@ -1,10 +1,8 @@
-A fashion show rates participants according to their level of hotness. Two different fashion shows were organized, one for men and the other for women. A date for the third is yet to be decided ;) .
+N persons are standing in a line. Height of each person is between 1 and N and height of each person is distinct. 
 
-Now the results of both fashion shows are out. The participants of both the fashion shows have decided to date each other, but as usual they have difficuly in choosing their partners. The Maximum Match dating serive (MMDS) comes to their rescue and matches them in such a way that that maximizes the hotness bonds for all couples.
+You are  given an array A where A[i] denotes how many persons are there before the i_th person having heights greater than the height of the ith person. For a person i, all the persons from 1 to i - 1 are considered to be before him. eg, For person 2, person 1 is considered before him.
 
-If a man has been rated at hotness level x and a women at hotness level y, the value of their hotness bond is x*y.
-
-Both fashion shows contain N participants each. MMDS has done its job and your job is to find the sum of hotness bonds for all the couples that MMDS has proposed.
+You have to find out whether this array can be valid for some arrangement of persons. If you can uniquely do so then output "YES" Otherwise output "NO".
 
 Instructions:
 1.To build run command
