@@ -3,22 +3,22 @@
 #include <algorithm>
 using namespace std;
 
-void exchange(long int *n1,long int *n2)
+void exchange(long long *n1,long long *n2)
 {
-	long int temp;
+	long long temp;
 	temp=*n1;
 	*n1=*n2;
 	*n2=temp;
 }
 
-long int split_inv_merge(long int *src,long int bg1,long int end1,long int bg2,long int end2,long int *original)
+long long split_inv_merge(long long *src,long long bg1,long long end1,long long bg2,long long end2,long long *original)
 {
-	long int i,j,count=0;
+	long long i,j,count=0;
 	i=bg1;
 	j=bg2;
-	for(long int k=bg1;k<=end2;)
+	for(long long k=bg1;k<=end2;)
 	{
-		if(*(src+i)<*(src+j))
+		if(*(src+i)<=*(src+j))
 		{
 			*(original+k++)=*(src+i++);
 		}
@@ -42,65 +42,66 @@ long int split_inv_merge(long int *src,long int bg1,long int end1,long int bg2,l
 			}
 		}
 	}
-	for(long int k=bg1;k<=end2;k++)
+	for(long long k=bg1;k<=end2;k++)
 	{
 		*(src+k)=*(original+k);
 	}
 	return count;
 }
 
-long int* mergesort(long int *src,long int start,long int end,long int *original)
+void mergesort(long long *src,long long start,long long end,long long *original,long long *number_inv)
 {
-	static long int number_inv=0;
+//	static long int number_inv=0;
 	if(end-start==1)
 	{
 		if(*(src+start)>*(src+end))
 		{
 			exchange(src+start,src+end);
 			exchange(original+start,original+end);
-			number_inv++;
-			return (&number_inv);
+			(*number_inv)++;
+			return;
 		}
 
 	}
 	else if(start==end)
 	{
-		return(&number_inv);
+		return;
 	}
 	else
 	{
-		mergesort(src,start,(start+end)/2,original);
-		mergesort(src,((start+end)/2)+1,end,original);
-		number_inv+=split_inv_merge(src,start,(start+end)/2,((start+end)/2)+1,end,original);
-		return (&number_inv);
+		mergesort(src,start,(start+end)/2,original,number_inv);
+		mergesort(src,((start+end)/2)+1,end,original,number_inv);
+		(*number_inv)+=split_inv_merge(src,start,(start+end)/2,((start+end)/2)+1,end,original);
+		return;
 	}
 }
 int main()
 {	
 	int TestCases,N;
 	cin>>TestCases;
-	cout<<TestCases<<" ";
+//	cout<<TestCases<<" ";
 	char temp;
-	long int* arr2,*original2;
-	long int* numberOfInversions;
+	long long* arr2,*original2;
+	long long inversions=0;
 	for(int j=0;j<TestCases;j++)
 	{
+		inversions=0;
 		cin>>N;
-		cout<<N<<" " ;
-		arr2 = (long int*)malloc(N*sizeof(int));
-		original2 = (long int*)malloc(N*sizeof(int));
+		//cout<<N<<" N "<<endl ;
+		arr2 = (long long*)malloc(N*sizeof(long long));
+		original2 = (long long*)malloc(N*sizeof(long long));
 		for(int i=0;i<N;i++)
 		{
 		cin>>arr2[i];
-		cout<<arr2[i]<<endl;;
+//		cout<<arr2[i]<<endl;;
 		original2[i]=arr2[i];
 		}
-		numberOfInversions = (mergesort(arr2,0,N-1,original2));
-		cout<<*numberOfInversions<<endl;
+		mergesort(arr2,0,N-1,original2,&inversions);
+		cout<<inversions<<endl;
 		free (arr2);
 		free(original2);
-cin>>temp;
-cout<<"worf"<<temp<<endl;
+		//cin>>temp;
+		//cout<<"worf"<<temp<<endl;
 	}
 
 	return 0;
