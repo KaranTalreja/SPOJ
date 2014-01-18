@@ -46,7 +46,7 @@ int main()
 		int rowX2,columnY2;
 		int sizeOfMoves = moves.size();
 		int sizeOfSource = sources.size();
-		for(int src=0;src<sizeOfSource;src++)
+		for(int src=0;src<1;src++)
 		{
 			queue.push_back(sources[src]);
 			for(int j=0;j<rows;j++)
@@ -59,33 +59,41 @@ int main()
 			}
 			while(queue.size() > 0)
 			{
+				int G;
 				pair<int,int> value;
 				value = queue[queue.size()-1];
 				queue.pop_back();
 				rowX = value.first;
 				columnY = value.second;
+				G = array[rowX][columnY].first;
+				if(G==0)
+					array[rowX][columnY].first = -2;
 				for(int k=0;k<sizeOfMoves;k++)
 				{
+					if(G==-2)
+						break;
 					rowX2 = rowX + moves[k].first;
 					columnY2 = columnY + moves[k].second;
 					if(rowX2 >=0 && rowX2<rows && columnY2 >=0 && columnY2 < columns)
 					{
-						if(array[rowX2][columnY2].second == false)
+						if(array[rowX2][columnY2].second == false  || (array[rowX2][columnY2].second == true && array[rowX2][columnY2].first == 0))
 						{
 							queue.push_back(make_pair<int,int>(rowX2,columnY2));
-							if((array[rowX2][columnY2].first == -1 || array[rowX][columnY].first + 1 < array[rowX2][columnY2].first))
-								array[rowX2][columnY2].first = array[rowX][columnY].first + 1;
+							if((array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
+								array[rowX2][columnY2].first = G + 1;
 							array[rowX2][columnY2].second = true;
+
 						}
-						else if(array[rowX2][columnY2].second == true && (array[rowX2][columnY2].first == -1 || array[rowX][columnY].first + 1 < array[rowX2][columnY2].first))
+						else if(array[rowX2][columnY2].second == true && (array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
 						{
-							array[rowX2][columnY2].first = array[rowX][columnY].first + 1;
+							queue.push_back(make_pair<int,int>(rowX2,columnY2));
+							array[rowX2][columnY2].first = G + 1;
 						}
 					}
 				}
 				//displaySources(&queue);
+				//display(&array);
 			}
-			//display(&array);
 		}
 		display(&array);
 	}
@@ -100,7 +108,7 @@ void display(vector<vector<pair<int,bool> > >*array)
 	{
 		for(int j=0;j<columns;j++)
 		{
-			printf("%d",(*array)[i][j].first);
+			printf("%d",(*array)[i][j].first == -2 ? 0 : (*array)[i][j].first);
 			(j != columns-1) ? printf(" "):printf("\n");;
 		}
 	}
