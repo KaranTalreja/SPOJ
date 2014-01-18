@@ -11,8 +11,6 @@ int main()
 	int rows,columns=1;
 	int TestCases;
 	string stream;
-	vector<pair<int,int> > sources;
-	vector<pair<int,int> > queue;
 	vector<pair<int,int> > moves;
 	moves.push_back(make_pair<int,int>(1 , 0)); // row+1 DOWN
 	moves.push_back(make_pair<int,int>(-1, 0)); // row-1 UP
@@ -23,6 +21,8 @@ int main()
 	{
 		scanf("%d %d",&rows,&columns);
 		vector<vector<pair<int,bool> > > array(rows,vector<pair<int,bool > >(columns));
+		vector<pair<int,int> > sources;
+		vector<pair<int,int> > queue;
 		for(int j=0;j<rows;j++)
 		{
 			cin>>stream;
@@ -73,7 +73,8 @@ int main()
 						if(array[rowX2][columnY2].second == false)
 						{
 							queue.push_back(make_pair<int,int>(rowX2,columnY2));
-							array[rowX2][columnY2].first = array[rowX][columnY].first + 1;
+							if((array[rowX2][columnY2].first == -1 || array[rowX][columnY].first + 1 < array[rowX2][columnY2].first))
+								array[rowX2][columnY2].first = array[rowX][columnY].first + 1;
 							array[rowX2][columnY2].second = true;
 						}
 						else if(array[rowX2][columnY2].second == true && (array[rowX2][columnY2].first == -1 || array[rowX][columnY].first + 1 < array[rowX2][columnY2].first))
@@ -82,11 +83,11 @@ int main()
 						}
 					}
 				}
-				displaySources(&queue);
+				//displaySources(&queue);
 			}
+			//display(&array);
 		}
 		display(&array);
-		displaySources(&sources);
 	}
 	return 0;
 }
