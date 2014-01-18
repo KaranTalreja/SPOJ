@@ -5,4 +5,5 @@ TEST
 /TestResult
 *.o
 *.swp
+*.swo
 *.tmp
