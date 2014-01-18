@@ -25,7 +25,7 @@ class moduloArith
 	}
 	long long divide(long long A,long long B)
 	{
-		return (((A % P) * (exp(B,P-2) % P )) % P);
+		return (((A % P) * (pow(B,P-2) % P )) % P);
 	}
 	long long exp(long long A, long long pow)
 	{
@@ -37,6 +37,21 @@ class moduloArith
 			retVal = multiply(retVal,A);
 		}
 		return retVal;
+	}
+	/* This function calculates (a^b)%MOD */
+	long long pow(long long A, long long B)
+	{
+	long long x = 1, y = A;
+	    while(B > 0) {
+	        if(B%2 == 1) {
+	            x=(x*y);
+	            if(x>P) x%=P;
+	        }
+	        y = (y*y);
+	        if(y>P) y%=P;
+	        B /= 2;
+	    }
+	    return x;
 	}
 };
 int main()
