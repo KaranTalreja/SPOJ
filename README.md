@@ -1,8 +1,8 @@
-N persons are standing in a line. Height of each person is between 1 and N and height of each person is distinct. 
+Little Willy just took a compilers course and is trying to implement his own compiler. First he wants to build a table with all the possible ids that a program could have. He knows that his language supports up to N different characters and any id can be up to L characters long. For example, when N = 2 (lets say characters can be 0 or 1), and L = 3, he could have the following ids: {0, 1, 00, 01, 10, 11, 000, 001, 010, 011, 100, 101, 110, 111}.
 
-You are  given an array A where A[i] denotes how many persons are there before the i_th person having heights greater than the height of the ith person. For a person i, all the persons from 1 to i - 1 are considered to be before him. eg, For person 2, person 1 is considered before him.
+You have to write a program that can help Willy find out the size of the table. Since the answer can be really big, you must print it modulo 1000000007 (10^9+7).
 
-You have to find out whether this array can be valid for some arrangement of persons. If you can uniquely do so then output "YES" Otherwise output "NO".
+Credits:http://comeoncodeon.wordpress.com/2011/10/09/modular-multiplicative-inverse/
 
 Instructions:
 1.To build run command
