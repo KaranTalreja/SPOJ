@@ -12,7 +12,6 @@ int main()
 	int TestCases;
 	string stream;
 	vector<pair<int,int> > moves;
-	int J,K;
 	moves.push_back(make_pair<int,int>(1 , 0)); // row+1 DOWN
 	moves.push_back(make_pair<int,int>(-1, 0)); // row-1 UP
 	moves.push_back(make_pair<int,int>(0 , 1)); // column+1 RIGHT
