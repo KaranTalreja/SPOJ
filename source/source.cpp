@@ -12,6 +12,7 @@ int main()
 	int TestCases;
 	string stream;
 	vector<pair<int,int> > moves;
+	int J,K;
 	moves.push_back(make_pair<int,int>(1 , 0)); // row+1 DOWN
 	moves.push_back(make_pair<int,int>(-1, 0)); // row-1 UP
 	moves.push_back(make_pair<int,int>(0 , 1)); // column+1 RIGHT
@@ -21,7 +22,6 @@ int main()
 	{
 		scanf("%d %d",&rows,&columns);
 		vector<vector<pair<int,bool> > > array(rows,vector<pair<int,bool > >(columns));
-		vector<pair<int,int> > sources;
 		vector<pair<int,int> > queue;
 		for(int j=0;j<rows;j++)
 		{
@@ -39,61 +39,53 @@ int main()
 					array[j][k].second = false;
 				}
 				if (array[j][k].first == 0)
-					sources.push_back(make_pair<int,int>(j,k));
+					{
+					J=j;
+					K=k;
+					}
 			}
 		}
 		int rowX,columnY;
 		int rowX2,columnY2;
 		int sizeOfMoves = moves.size();
-		int sizeOfSource = sources.size();
-		for(int src=0;src<1;src++)
+		queue.push_back(make_pair<int,int>(J,K));
+		while(queue.size() > 0)
 		{
-			queue.push_back(sources[src]);
-			for(int j=0;j<rows;j++)
+			int G;
+			pair<int,int> value;
+			value = queue[queue.size()-1];
+			queue.pop_back();
+			rowX = value.first;
+			columnY = value.second;
+			G = array[rowX][columnY].first;
+			if(G==0)
+				array[rowX][columnY].first = -2;
+			for(int k=0;k<sizeOfMoves;k++)
 			{
-				for(int k=0;k<columns;k++)
+				if(G==-2)
+					break;
+				rowX2 = rowX + moves[k].first;
+				columnY2 = columnY + moves[k].second;
+				if(rowX2 >=0 && rowX2<rows && columnY2 >=0 && columnY2 < columns)
 				{
-					if(array[j][k].first != 0)
-						array[j][k].second = false;
-				}
-			}
-			while(queue.size() > 0)
-			{
-				int G;
-				pair<int,int> value;
-				value = queue[queue.size()-1];
-				queue.pop_back();
-				rowX = value.first;
-				columnY = value.second;
-				G = array[rowX][columnY].first;
-				if(G==0)
-					array[rowX][columnY].first = -2;
-				for(int k=0;k<sizeOfMoves;k++)
-				{
-					if(G==-2)
-						break;
-					rowX2 = rowX + moves[k].first;
-					columnY2 = columnY + moves[k].second;
-					if(rowX2 >=0 && rowX2<rows && columnY2 >=0 && columnY2 < columns)
-					{
-						if(array[rowX2][columnY2].second == false  || (array[rowX2][columnY2].second == true && array[rowX2][columnY2].first == 0))
-						{
-							queue.push_back(make_pair<int,int>(rowX2,columnY2));
-							if((array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
-								array[rowX2][columnY2].first = G + 1;
-							array[rowX2][columnY2].second = true;
 
-						}
-						else if(array[rowX2][columnY2].second == true && (array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
-						{
-							queue.push_back(make_pair<int,int>(rowX2,columnY2));
+					if(array[rowX2][columnY2].second == false  || (array[rowX2][columnY2].second == true && array[rowX2][columnY2].first == 0))
+					{
+						queue.push_back(make_pair<int,int>(rowX2,columnY2));
+						if((array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
 							array[rowX2][columnY2].first = G + 1;
-						}
+						array[rowX2][columnY2].second = true;
+
+					}
+					else if(array[rowX2][columnY2].second == true && (array[rowX2][columnY2].first == -1 || G + 1 < array[rowX2][columnY2].first))
+					{
+						queue.push_back(make_pair<int,int>(rowX2,columnY2));
+						array[rowX2][columnY2].first = G + 1;
 					}
 				}
-				//displaySources(&queue);
-				//display(&array);
 			}
+			//displaySources(&queue);
+			//display(&array);
 		}
 		display(&array);
 	}
