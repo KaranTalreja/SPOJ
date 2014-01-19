@@ -1,8 +1,13 @@
-Little Willy just took a compilers course and is trying to implement his own compiler. First he wants to build a table with all the possible ids that a program could have. He knows that his language supports up to N different characters and any id can be up to L characters long. For example, when N = 2 (lets say characters can be 0 or 1), and L = 3, he could have the following ids: {0, 1, 00, 01, 10, 11, 000, 001, 010, 011, 100, 101, 110, 111}.
+There is given a rectangular bitmap of size n*m. Each pixel of the bitmap is either white or black, but at least one is white. The pixel in i-th line and j-th column is called the pixel (i,j). The distance between two pixels p1=(i1,j1) and p2=(i2,j2) is defined as:
 
-You have to write a program that can help Willy find out the size of the table. Since the answer can be really big, you must print it modulo 1000000007 (10^9+7).
+d(p1,p2)=|i1-i2|+|j1-j2|.
+Task
 
-Credits:http://comeoncodeon.wordpress.com/2011/10/09/modular-multiplicative-inverse/
+Write a program which:
+
+reads the description of the bitmap from the standard input,
+for each pixel, computes the distance to the nearest white pixel,
+writes the results to the standard output.
 
 Instructions:
 1.To build run command
