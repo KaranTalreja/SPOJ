@@ -1,14 +1,10 @@
-There is given a rectangular bitmap of size n*m. Each pixel of the bitmap is either white or black, but at least one is white. The pixel in i-th line and j-th column is called the pixel (i,j). The distance between two pixels p1=(i1,j1) and p2=(i2,j2) is defined as:
+In Byteland they have a very strange monetary system.
 
-d(p1,p2)=|i1-i2|+|j1-j2|.
-Task
+Each Bytelandian gold coin has an integer number written on it. A coin n can be exchanged in a bank into three coins: n/2, n/3 and n/4. But these numbers are all rounded down (the banks have to make a profit).
 
-Write a program which:
+You can also sell Bytelandian coins for American dollars. The exchange rate is 1:1. But you can not buy Bytelandian coins.
 
-reads the description of the bitmap from the standard input,
-for each pixel, computes the distance to the nearest white pixel,
-writes the results to the standard output.
-
+You have one gold coin. What is the maximum amount of American dollars you can get for it?
 Instructions:
 1.To build run command
     make
