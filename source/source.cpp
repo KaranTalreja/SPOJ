@@ -2,26 +2,25 @@
 #include <stdio.h>
 #include <tr1/unordered_map>
 using namespace std;
-long int getValue(long int n,tr1::unordered_map<long int,long int>*Cache);
+long long getValue(long long n,tr1::unordered_map<long long,long long>*Cache);
 int main()
 {	
-	long int n=0;
-	tr1::unordered_map<long int,long int>Cache;
-	for(int i=0;i<12;i++)
+	int n=0;
+	tr1::unordered_map<long long,long long>Cache;
+	for(int i=0;i<1;i++)
 	{
-		(Cache).insert(tr1::unordered_map<long int,long int>::value_type(i,i));
+		(Cache).insert(tr1::unordered_map<long long,long long>::value_type(i,i));
 	}
-	while(!feof(stdin))
+	while(cin>>n)
 	{
-		scanf("%ld",&n);
-		printf("%ld\n",getValue(n,&Cache));
+		printf("%llu\n",getValue(n,&Cache));
 	}
 	return 0;
 }
-long int getValue(long int n,tr1::unordered_map<long int,long int>*Cache)
+long long getValue(long long n,tr1::unordered_map<long long,long long>*Cache)
 {
-	long int retVal;
-	tr1::unordered_map<long int,long int>::iterator itr = (*Cache).find(n);
+	long long retVal;
+	tr1::unordered_map<long long,long long>::iterator itr = (*Cache).find(n);
 	if(itr!=(*Cache).end())
 	{
 		retVal =  (itr)->second;
@@ -29,12 +28,12 @@ long int getValue(long int n,tr1::unordered_map<long int,long int>*Cache)
 	}
 	else
 	{
-		long int a,b,c;
-		a = getValue(n/4,Cache);
+		long long a,b,c;
+		a = getValue(n/2,Cache);
 		b = getValue(n/3,Cache);
-		c = getValue(n/2,Cache);
-		retVal = a+b+c;
+		c = getValue(n/4,Cache);
+		retVal = a+b+c > n ? a+b+c : n;
 	}
-	(*Cache).insert(tr1::unordered_map<long int,long int>::value_type(n,retVal));
+	(*Cache).insert(tr1::unordered_map<long long,long long>::value_type(n,retVal));
 	return retVal;
 }
