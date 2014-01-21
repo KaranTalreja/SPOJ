@@ -42,6 +42,7 @@ public:
 };
 int noOfNodes,noOfEdges;
 vector<node*> *Graph;
+vector<edge*> AllEdges;
 int main() {
 	edge *tempEdge,*tempEdge2;
 	node *tempNodeStart,*tempNodeEnd;
@@ -57,10 +58,28 @@ int main() {
 		tempEdge2 = new edge(tempNodeEnd,tempNodeStart,tempWeight);
 		tempNodeStart->edges.push_back(tempEdge);
 		tempNodeEnd->edges.push_back(tempEdge2);
+		AllEdges.push_back(tempEdge);
+		AllEdges.push_back(tempEdge2);
 		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
 		(*Graph)[tempNodeEndVal-1] = tempNodeEnd;
 	}
-	decompileGraph();
+	int i = noOfNodes,MstCost=0;
+	(*Graph)[0]->explored = true;
+	i--;
+	while(i>0)
+	{
+		edge* minEdge = AllEdges[0];
+		for(int j=0;j<AllEdges.size();j++)
+		{
+			if(AllEdges[j]->first->explored == true && AllEdges[j]->second->explored == false)
+				minEdge = minEdge->weight >= AllEdges[j]->weight ? AllEdges[j] : minEdge;
+		}
+		MstCost += minEdge->weight;
+		i--;
+		minEdge->second->explored = true;
+	}
+	cout<<MstCost<<endl;
+	//decompileGraph();
 	freeGraph();
 	return 0;
 }
