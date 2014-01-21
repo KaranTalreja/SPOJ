@@ -54,7 +54,7 @@ int main() {
 		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
 		tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
 		tempEdge = new edge(tempNodeStart,tempNodeEnd,tempWeight);
-		tempEdge2 = new edge(tempNodeEnd,tempNodeEnd,tempWeight);
+		tempEdge2 = new edge(tempNodeEnd,tempNodeStart,tempWeight);
 		tempNodeStart->edges.push_back(tempEdge);
 		tempNodeEnd->edges.push_back(tempEdge2);
 		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
