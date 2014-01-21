@@ -7,10 +7,7 @@ int main()
 {	
 	int n=0;
 	tr1::unordered_map<long long,long long>Cache;
-	for(int i=0;i<1;i++)
-	{
-		(Cache).insert(tr1::unordered_map<long long,long long>::value_type(i,i));
-	}
+	(Cache).insert(tr1::unordered_map<long long,long long>::value_type(0,0));
 	while(cin>>n)
 	{
 		printf("%llu\n",getValue(n,&Cache));
@@ -22,10 +19,7 @@ long long getValue(long long n,tr1::unordered_map<long long,long long>*Cache)
 	long long retVal;
 	tr1::unordered_map<long long,long long>::iterator itr = (*Cache).find(n);
 	if(itr!=(*Cache).end())
-	{
-		retVal =  (itr)->second;
-		return retVal;
-	}
+		return  (itr)->second;
 	else
 	{
 		long long a,b,c;
