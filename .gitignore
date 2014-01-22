@@ -1,0 +1,9 @@
+.cproject
+.project
+/bin
+TEST
+/TestResult
+*.o
+*.swp
+*.swo
+*.tmp
