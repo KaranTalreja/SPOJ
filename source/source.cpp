@@ -78,23 +78,9 @@ int main() {
 	heapMin heap;
 	int MstCost=0;
 	MstCost = computeMst(&heap,(*Graph)[0]);
-
-	//	i--;
-	//	while(i>0)
-	//	{
-	//		edge* minEdge = heap.extractMin();
-	//		while(!(minEdge->first->explored == true && minEdge->second->explored == false))
-	//			minEdge = heap.extractMin();
-	//		MstCost += minEdge->weight;
-	//		i--;
-	//		currNode = minEdge->second;
-	//		currNode->explored = true;
-	//		for(int j=0;j<currNode->edges.size();j++)
-	//			heap.insert(currNode->edges[j]);
-	//	}
 	cout<<MstCost<<endl;
 	//decompileGraph();
-	//freeGraph();
+	freeGraph();
 	return 0;
 }
 int computeMst(heapMin *heap,node* currNode)
@@ -161,6 +147,8 @@ edge* heapMin::extractMin(void)
 	edge* retVal = NULL,*tempEdge;
 	if(!heap.empty())
 		retVal = heap[0];
+	else
+		return retVal;
 	tempEdge = heap[0];
 	heap[0] = heap[size-1];
 	heap[size-1] = tempEdge;
