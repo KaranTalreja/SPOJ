@@ -85,9 +85,13 @@ int main() {
 }
 int computeMst(heapMin *heap,node* currNode)
 {
+	int retVal;
 	currNode->explored = true;
 	for(int j=0;j<currNode->edges.size();j++)
-		heap->insert(currNode->edges[j]);
+	{
+		if(currNode->edges[j]->second->explored == false)
+			heap->insert(currNode->edges[j]);
+	}
 	edge* minEdge = heap->extractMin();
 	while(!(minEdge->first->explored == true && minEdge->second->explored == false))
 	{
@@ -95,8 +99,9 @@ int computeMst(heapMin *heap,node* currNode)
 		if(minEdge == NULL)
 			return 0;
 	}
-
-	return minEdge->weight + computeMst(heap,minEdge->second);
+	retVal =  minEdge->weight + computeMst(heap,minEdge->second);
+	currNode->explored = false;
+	return retVal;
 }
 void freeGraph()
 {
