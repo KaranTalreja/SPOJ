@@ -1,14 +1,13 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
-
-using namespace std;
-
-void freeGraph();
-void decompileGraph();
-
+class heapMin;
 class edge;
 class node;
+using namespace std;
+int computeMst(heapMin *heap,node* currNode);
+void freeGraph();
+void decompileGraph();
 class heapMin
 {
 	std::vector<edge*> heap;
@@ -77,28 +76,41 @@ int main() {
 		(*Graph)[tempNodeEndVal-1] = tempNodeEnd;
 	}
 	heapMin heap;
-	int i = noOfNodes,MstCost=0;
-	node* currNode = (*Graph)[0];
-	currNode->explored = true;
-	for(int j=0;j<currNode->edges.size();j++)
-		heap.insert(currNode->edges[j]);
-	i--;
-	while(i>0)
-	{
-		edge* minEdge = heap.extractMin();
-		while(!(minEdge->first->explored == true && minEdge->second->explored == false))
-			minEdge = heap.extractMin();
-		MstCost += minEdge->weight;
-		i--;
-		currNode = minEdge->second;
-		currNode->explored = true;
-		for(int j=0;j<currNode->edges.size();j++)
-			heap.insert(currNode->edges[j]);
-	}
+	int MstCost=0;
+	MstCost = computeMst(&heap,(*Graph)[0]);
+
+	//	i--;
+	//	while(i>0)
+	//	{
+	//		edge* minEdge = heap.extractMin();
+	//		while(!(minEdge->first->explored == true && minEdge->second->explored == false))
+	//			minEdge = heap.extractMin();
+	//		MstCost += minEdge->weight;
+	//		i--;
+	//		currNode = minEdge->second;
+	//		currNode->explored = true;
+	//		for(int j=0;j<currNode->edges.size();j++)
+	//			heap.insert(currNode->edges[j]);
+	//	}
 	cout<<MstCost<<endl;
 	//decompileGraph();
-	freeGraph();
+	//freeGraph();
 	return 0;
+}
+int computeMst(heapMin *heap,node* currNode)
+{
+	currNode->explored = true;
+	for(int j=0;j<currNode->edges.size();j++)
+		heap->insert(currNode->edges[j]);
+	edge* minEdge = heap->extractMin();
+	while(!(minEdge->first->explored == true && minEdge->second->explored == false))
+	{
+		minEdge = heap->extractMin();
+		if(minEdge == NULL)
+			return 0;
+	}
+
+	return minEdge->weight + computeMst(heap,minEdge->second);
 }
 void freeGraph()
 {
@@ -146,7 +158,9 @@ void heapMin::insert(edge* Edge)
 
 edge* heapMin::extractMin(void)
 {
-	edge* retVal = heap[0],*tempEdge;
+	edge* retVal = NULL,*tempEdge;
+	if(!heap.empty())
+		retVal = heap[0];
 	tempEdge = heap[0];
 	heap[0] = heap[size-1];
 	heap[size-1] = tempEdge;
@@ -160,16 +174,16 @@ edge* heapMin::extractMin(void)
 	{
 		if(2*parent != size)
 		{
-		child = (heap[(2*parent)-1]->weight <= heap[(2*parent)]->weight) ? 2*parent : 2*parent + 1;
-		if(heap[child-1]->weight < heap[parent-1]->weight)
-		{
-			tempEdge = heap[child -1];
-			heap[child - 1] = heap[parent - 1];
-			heap[parent - 1] = tempEdge;
-			parent = child;
-		}
-		else
-			break;
+			child = (heap[(2*parent)-1]->weight <= heap[(2*parent)]->weight) ? 2*parent : 2*parent + 1;
+			if(heap[child-1]->weight < heap[parent-1]->weight)
+			{
+				tempEdge = heap[child -1];
+				heap[child - 1] = heap[parent - 1];
+				heap[parent - 1] = tempEdge;
+				parent = child;
+			}
+			else
+				break;
 		}
 		else
 		{
