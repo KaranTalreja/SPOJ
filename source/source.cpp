@@ -22,14 +22,18 @@ int main()
 			if(sum)
 			{
 				sum-=array[j-1];
-				if(sum + array[j+k-1] <= Bt)
+				if((j+k-1 < At) && (sum + array[j+k-1] <= Bt))
 					sum += array[j+k-1];
-				else
+				else if(j+k-1 < At)
 				{
 					j=j+k-1;
 					k=0;
 					sum = 0;
 					continue;
+				}
+				else
+				{
+					break;
 				}
 			}
 			for(;j+k <At; k++)
@@ -39,7 +43,12 @@ int main()
 				else
 					break;
 			}
-			if(BestVal.first <= sum && BestVal.second < k)
+			if(BestVal.second < k)
+			{
+				BestVal.first = sum;
+				BestVal.second = k;
+			}
+			else if(BestVal.second == k && BestVal.first > sum)
 			{
 				BestVal.first = sum;
 				BestVal.second = k;
