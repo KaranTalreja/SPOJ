@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
-int array[100000] = {0};
+
 int main()
 {
 	int TestCases,At,Bt;
@@ -10,27 +10,43 @@ int main()
 	for (int i=0;i<TestCases;i++)
 	{
 		scanf("%d %d",&At,&Bt);
+		int *array = (int*)malloc(sizeof(int)*At);
 		pair<int,int> BestVal(0,0);
 		for(int j=0;j<At;j++)
 		{
 			scanf("%d",&array[j]);
 		}
+		int k=0,sum=0;
 		for(int j=0;j<At;j++)
 		{
-			int sum = 0,k;
-			for(k=0; j+k <At; k++)
+			if(sum)
+			{
+				sum-=array[j-1];
+				if(sum + array[j+k-1] <= Bt)
+					sum += array[j+k-1];
+				else
+				{
+					j=j+k-1;
+					k=0;
+					sum = 0;
+					continue;
+				}
+			}
+			for(;j+k <At; k++)
 			{
 				if(sum + array[j+k] <= Bt)
 					sum += array[j+k];
 				else
 					break;
 			}
-			if(BestVal.first < sum && BestVal.second <= k)
+			if(BestVal.first <= sum && BestVal.second < k)
 			{
 				BestVal.first = sum;
 				BestVal.second = k;
 			}
 		}
+		free(array);
+		array = NULL;
 		printf("%d %d\n",BestVal.first,BestVal.second);
 	}
 	return 0;
