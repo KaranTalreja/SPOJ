@@ -26,9 +26,7 @@ int main()
 					sum += array[j+k-1];
 				else if(j+k-1 < At)
 				{
-					j=j+k-1;
-					k=0;
-					sum = 0;
+					k--;
 					continue;
 				}
 				else
