@@ -1,0 +1,6 @@
+/bin
+TEST
+/TestResult
+*.o
+*.swp
+*.tmp
