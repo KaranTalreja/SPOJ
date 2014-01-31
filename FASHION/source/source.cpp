@@ -1,111 +1,65 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-void mergesort(int *src,int start,int end,int *original);
-void merge(int *src, int bg1, int end1, int bg2, int end2,int *original);
-void exchange(int *n1, int *n2);
+#include <stdio.h>
+#include <stdlib.h>
+#define getcx getchar_unlocked
+#define BASE 10
+#define MAX 1000
+int arrM[MAX],arrF[MAX];
+inline void inp( int &n )//fast input function
+{
+   n=0;
+   register int ch=getcx();int sign=1;
+   while( ch < '0' || ch > '9' ){if(ch=='-')sign=-1; ch=getcx();}
 
+   while(  ch >= '0' && ch <= '9' )
+           n = (n<<3)+(n<<1) + ch-'0', ch=getcx();
+   n=n*sign;
+}
+void radixsort(int *a, int n);
 int main()
 {
 	int testCases,N;
 
-	cin>>testCases;
+	inp(testCases);
 	for (int i=0;i<testCases;i++)
 	{
-		cin>>N;
-		int *arrM = (int*)malloc(N*sizeof(int));
-		int *originalM = (int*)malloc(N*sizeof(int));
-		int *arrF = (int*)malloc(N*sizeof(int));
-		int *originalF = (int*)malloc(N*sizeof(int));
+		inp(N);
 		for(int k=0;k<N;k++)
-		{
-			cin>>arrM[k];
-			originalM[k]=arrM[k];
-		}
+			inp(arrM[k]);
 		for(int k=0;k<N;k++)
-		{
-			cin>>arrF[k];
-			originalF[k]=arrF[k];
-		}
-		mergesort(arrM,0,N-1,originalM);
-		mergesort(arrF,0,N-1,originalF);
+			inp(arrF[k]);
+		radixsort(arrM,N);
+		radixsort(arrF,N);
 		int sum=0;
 		for(int i=0;i<N;i++)
 		{
 			sum += (arrM[i]) * (arrF[i]);
 		}
-		cout<<sum<<endl;
-		free(arrM);
-		free(arrF);
-		free(originalF);
-		free(originalM);
+		printf("%d\n",sum);
 	}
 	return 0;
 }
-void exchange(int *n1, int *n2)
-{
-	int temp;
-	temp=*n1;
-	*n1=*n2;
-	*n2=temp;
-}
 
-void merge(int *src, int bg1, int end1, int bg2, int end2,int *original)
+void radixsort(int *a, int n)
 {
-	int i,j;
-	i=bg1;
-	j=bg2;
-	for(int k=bg1;k<=end2;)
-	{
-		if(*(src+i)<=*(src+j))
-		{
-			*(original+k++)=*(src+i++);
-		}
-		else if(*(src+j)<*(src+i))
-		{
-			*(original+k++)=*(src+j++);
-		}
-		if(i>end1)
-		{
-			while(j<=end2)
-			{
-				*(original+(k++))=*(src+(j++));
-			}
-		}
-		else if(j>end2)
-		{
-			while(i<=end1)
-			{
-				*(original+(k++))=*(src+(i++));
-			}
-		}
-	}
-	for(int k=bg1;k<=end2;k++)
-	{
-		*(src+k)=*(original+k);
-	}
-}
-void mergesort(int *src,int start,int end,int *original)
-{
-	if(end-start==1)
-	{
-		if(*(src+start)>*(src+end))
-		{
-			exchange(src+start,src+end);
-			exchange(original+start,original+end);
-			return;
-		}
+  int i, b[MAX], m = a[0], exp = 1;
+  for (i = 1; i < n; i++)
+  {
+    if (a[i] > m)
+      m = a[i];
+  }
 
-	}
-	else if(start==end)
-	{
-		return;
-	}
-	else
-	{
-		mergesort(src,start,(start+end)/2,original);
-		mergesort(src,((start+end)/2)+1,end,original);
-		merge(src,start,(start+end)/2,((start+end)/2)+1,end,original);
-	}
+  while (m / exp > 0)
+  {
+    int bucket[BASE] ={  0 };
+    for (i = 0; i < n; i++)
+      bucket[(a[i] / exp) % BASE]++;
+    for (i = 1; i < BASE; i++)
+      bucket[i] += bucket[i - 1];
+    for (i = n - 1; i >= 0; i--)
+      b[--bucket[(a[i] / exp) % BASE]] = a[i];
+    for (i = 0; i < n; i++)
+      a[i] = b[i];
+    exp *= BASE;
+  }
 }
