@@ -1,53 +1,21 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
+#include <stdio.h>
 int main()
 {	
-	int TestCases,N;
-	cin>>TestCases;
-	for(int i=0;i<TestCases;i++)
+	int TestCases,N,i,j;
+	int currentValue;
+	int flag = 0;
+	scanf("%d",&TestCases);
+	for(i=0;i<TestCases;i++)
 	{
-		cin>>N;
-		vector<int> first(N);
-		vector<int> temp(N);
-		vector<int> ::iterator start= first.begin();
-		int currentValue;
-		bool flag = true;
-		for (int j=0;j<N;j++)
+		scanf("%d",&N);
+		flag=0;
+		for (j=0;j<N;j++)
 		{
-			cin>>currentValue;
-			temp[j]=currentValue;
-			if(currentValue <= j)
-			{
-					first.insert(start + j - currentValue,j);
-					start = first.begin();
-			}
-			else
-			{
-				flag = false;
-				break;
-			}
-
-
+			scanf("%d",&currentValue);
+			if(currentValue > j)
+				flag = 1;
 		}
-
-		vector<int> second(N);
-
-		for(int k=0;k<N;k++)
-			second[first[k]] = k+1;
-
-
-//		for(int k=0;k<N;k++)
-//			cout<<second[k]<<" ";
-//		cout<<endl;
-//		for(int k=0;k<N;k++)
-//				cout<<temp[k]<<" ";
-//			cout<<endl;
-		if(flag==false)
-			cout<<"NO"<<endl;
-		else
-			cout<<"YES"<<endl;
+		(flag==1 )? printf("NO\n"):printf("YES\n");
 	}
 	return 0;
 }
