@@ -12,8 +12,6 @@ inline void inp( int &n )//fast input function
 	n=n*sign;
 }
 int array[MAX];
-int MaximumSubArray(int start, int end,int* array);
-int MaximumCrossingArray(int start,int mid,int end,int *array);
 int main()
 {	
 	int TestCases, N;
@@ -23,51 +21,33 @@ int main()
 		inp(N);
 		for(int j=0;j<N;j++)
 			inp(array[j]);
-		printf("%d\n",MaximumSubArray(0,N-1,array));
-
+		int best = array[0],retVal,leftArrayMax,rightArrayMax,crossingArrayMax,count=1;
+		for(int j=1;j<N;j++)
+		{
+			leftArrayMax = array[j-1];
+			rightArrayMax = array[j];
+			crossingArrayMax = leftArrayMax + rightArrayMax;
+			if(rightArrayMax >= leftArrayMax && rightArrayMax >= crossingArrayMax)
+				retVal = array[j];
+			else if(leftArrayMax >= rightArrayMax && leftArrayMax >= crossingArrayMax)
+				retVal = leftArrayMax + array[j];
+			else
+				retVal = crossingArrayMax;
+			array[j] =  retVal;
+			if(retVal > best)
+			{
+				best = retVal;
+				count=1;
+			}
+			else if(retVal == best)
+			{
+				if(leftArrayMax == 0 || rightArrayMax == 0)
+					count++;
+				if(rightArrayMax == best)
+					count++;
+			}
+		}
+		printf("%d %d\n",best,count);
 	}
 	return 0;
-}
-int MaximumSubArray(int start,int end,int *array)
-{
-	if(start == end)
-		return array[start];
-	int retVal,leftArrayMax,rightArrayMax,crossingArrayMax;
-	int mid = (start+end)/2;
-	leftArrayMax = MaximumSubArray(start,mid,array);
-	rightArrayMax = MaximumSubArray(mid+1,end,array);
-	crossingArrayMax = MaximumCrossingArray(start,mid,end,array);
-
-	if(rightArrayMax >= leftArrayMax && rightArrayMax >= crossingArrayMax)
-		retVal = rightArrayMax;
-	else if(leftArrayMax >= rightArrayMax && leftArrayMax >= crossingArrayMax)
-		retVal = leftArrayMax;
-	else
-		retVal = crossingArrayMax;
-	return retVal;
-}
-
-int MaximumCrossingArray(int start,int mid,int end ,int* array)
-{
-	int sum=array[mid],tempMid = mid;
-	int bestSum,rightSum;
-	bestSum = array[mid];
-	while(tempMid > start)
-	{
-		sum += array[tempMid-1];
-		tempMid--;
-		if(sum >= bestSum)
-			bestSum = sum;
-	}
-	tempMid = mid;
-	sum = bestSum;
-	rightSum = array[mid];
-	while(tempMid < end)
-	{
-		sum += array[tempMid+1];
-		tempMid++;
-		if(sum >= rightSum)
-			rightSum = sum;
-	}
-	return rightSum;
 }
