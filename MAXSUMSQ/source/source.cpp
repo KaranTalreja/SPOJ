@@ -49,47 +49,25 @@ int MaximumSubArray(int start,int end,int *array)
 
 int MaximumCrossingArray(int start,int mid,int end ,int* array)
 {
-	int sum=array[mid],tempMid = mid,retVal=array[mid];
-	int leftLimit,rightLimit,leftSum,rightSum;
-	int leftArrayMax,rightArrayMax,crossingArrayMax;
+	int sum=array[mid],tempMid = mid;
+	int bestSum,rightSum;
+	bestSum = array[mid];
 	while(tempMid > start)
 	{
-		if(sum + array[tempMid-1] >= sum)
-		{
-			sum += array[tempMid-1];
-			tempMid--;
-		}
-		else
-			break;
+		sum += array[tempMid-1];
+		tempMid--;
+		if(sum >= bestSum)
+			bestSum = sum;
 	}
-	leftSum = sum;
-	leftLimit = tempMid;
 	tempMid = mid;
-	sum = array[mid];
+	sum = bestSum;
+	rightSum = array[mid];
 	while(tempMid < end)
 	{
-		if(sum + array[tempMid+1] >= sum)
-		{
-			sum += array[tempMid+1];
-			tempMid++;
-		}
-		else
-			break;
+		sum += array[tempMid+1];
+		tempMid++;
+		if(sum >= rightSum)
+			rightSum = sum;
 	}
-	rightSum = sum;
-	rightLimit = tempMid;
-	leftArrayMax = leftSum;
-	rightArrayMax = rightSum;
-	crossingArrayMax = leftSum + rightSum - array[mid];
-	if(rightArrayMax >= leftArrayMax && rightArrayMax >= crossingArrayMax)
-		retVal = rightArrayMax;
-	else if(leftArrayMax >= rightArrayMax && leftArrayMax >= crossingArrayMax)
-		retVal = leftArrayMax;
-	else
-		retVal = crossingArrayMax;
-	return retVal;
+	return rightSum;
 }
-
-
-
-
