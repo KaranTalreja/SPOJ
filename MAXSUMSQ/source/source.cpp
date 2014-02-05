@@ -41,9 +41,9 @@ int main()
 			}
 			else if(retVal == best)
 			{
-				if(leftArrayMax == 0 || rightArrayMax == 0)
-					count++;
 				if(rightArrayMax == best)
+					count++;
+				if(crossingArrayMax == best)
 					count++;
 			}
 		}
