@@ -21,30 +21,26 @@ int main()
 		inp(N);
 		for(int j=0;j<N;j++)
 			inp(array[j]);
+		int start,k;
 		int best = array[0],retVal,leftArrayMax,rightArrayMax,crossingArrayMax,count=1;
+		if(best == 0)
+		{
+			start = 0;
+			k=1;
+		}
 		for(int j=1;j<N;j++)
 		{
 			leftArrayMax = array[j-1];
 			rightArrayMax = array[j];
 			crossingArrayMax = leftArrayMax + rightArrayMax;
-			if(rightArrayMax >= leftArrayMax && rightArrayMax >= crossingArrayMax)
-				retVal = array[j];
-			else if(leftArrayMax >= rightArrayMax && leftArrayMax >= crossingArrayMax)
-				retVal = leftArrayMax + array[j];
+			if(rightArrayMax > crossingArrayMax)
+				retVal = rightArrayMax;
 			else
 				retVal = crossingArrayMax;
 			array[j] =  retVal;
-			if(retVal > best)
+			if(retVal > best )
 			{
 				best = retVal;
-				count=1;
-			}
-			else if(retVal == best)
-			{
-				if(rightArrayMax == best)
-					count++;
-				if(crossingArrayMax == best)
-					count++;
 			}
 		}
 		printf("%d %d\n",best,count);
