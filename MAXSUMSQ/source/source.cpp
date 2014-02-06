@@ -12,8 +12,9 @@ inline void inp( int &n )//fast input function
 	n=n*sign;
 }
 int array[MAX];
+long long int count[MAX];
 int main()
-{	
+{
 	int TestCases, N;
 	inp(TestCases);
 	for (int i=0;i<TestCases;i++)
@@ -21,29 +22,44 @@ int main()
 		inp(N);
 		for(int j=0;j<N;j++)
 			inp(array[j]);
-		int start,k;
-		int best = array[0],retVal,leftArrayMax,rightArrayMax,crossingArrayMax,count=1;
-		if(best == 0)
-		{
-			start = 0;
-			k=1;
-		}
+		int best = array[0],retVal,leftArrayMax,rightArrayMax,crossingArrayMax;
+		count[0]=1;
 		for(int j=1;j<N;j++)
 		{
 			leftArrayMax = array[j-1];
 			rightArrayMax = array[j];
 			crossingArrayMax = leftArrayMax + rightArrayMax;
-			if(rightArrayMax > crossingArrayMax)
-				retVal = rightArrayMax;
+			if(rightArrayMax == crossingArrayMax)
+			{
+					retVal = crossingArrayMax;
+					count[j]=count[j-1]+1;
+			}
 			else
-				retVal = crossingArrayMax;
+			{
+				if(rightArrayMax > crossingArrayMax)
+				{
+					retVal = rightArrayMax;
+					count[j]=1;
+				}
+				else
+				{
+					retVal = crossingArrayMax;
+					count[j]= count[j-1];
+				}
+			}
 			array[j] =  retVal;
 			if(retVal > best )
 			{
 				best = retVal;
 			}
+
 		}
-		printf("%d %d\n",best,count);
+		long long int ret=0;
+		for(int i=0;i<N;i++){
+			if(array[i] == best)
+				ret+=count[i];
+		}
+		printf("%d %lld\n",best,ret);
 	}
 	return 0;
 }
