@@ -69,10 +69,11 @@ int main()
 	vector<node*> *Graph;
 	node* tempNodeStart,*tempNodeEnd;
 	edge* tempEdge;
-
+	char line[100];
+	char* name = line;
 	int TestCases;
 	inp(TestCases);
-	string name;
+	//string name;
 	for(int t=0;t<TestCases;t++)
 	{
 		int noOfNodes,noOfEdges;
@@ -81,7 +82,8 @@ int main()
 		tr1::unordered_map<string,int> setOfNodes;
 		for(int i=1;i<=noOfNodes;i++)
 		{
-			cin>>name;
+			//cin>>name;
+			inpLine(name);
 			int tempNodeStartVal,tempNodeEndVal,weight;
 			setOfNodes.insert(tr1::unordered_map<string,int>::value_type(name,i));
 			tempNodeStartVal = i;
@@ -100,13 +102,16 @@ int main()
 		}
 		int noOfQueries;
 		inp(noOfQueries);
-		string source,destination;
+		char* source,*destination;
+		//string source,destination;
 		tr1::unordered_map<string,int>::iterator itr;
 		for(int i=0;i<noOfQueries;i++)
 		{
-			cin >> source;
-			cin >> destination;
+			source = line;
+			inpLine(source);
 			itr = setOfNodes.find(source);
+			destination = line;
+			inpLine(destination);
 			node* Source,*Destination;
 			if(itr!=setOfNodes.end())
 				Source = (*Graph)[itr->second-1];
@@ -121,7 +126,6 @@ int main()
 			Source->data = 0;
 			Source->explored = true;
 			vector<edge*>::iterator iter;
-			//			for(int i=0;i<noOfNodes;i++)
 			while(Destination->explored == false)
 			{
 				if(heap.getSize() > 0)
@@ -233,11 +237,15 @@ void heapMin::insert(node* Edge)
 
 node* heapMin::extractMin(void)
 {
-	return heap[0];
+	if(!heap.empty())
+		return heap[0];
+	else
+		return NULL;
 }
 void heapMin::deleteNode(node* del)
 {
 	node* tempEdge;
+	int temp = del->indexInHeap + 1;
 	int parent = del->indexInHeap + 1;
 	tempEdge = heap[del->indexInHeap];
 	heap[del->indexInHeap] = heap[size-1];
@@ -247,14 +255,26 @@ void heapMin::deleteNode(node* del)
 	vector<node*> :: iterator itr = heap.begin();
 	itr = itr + size -1;
 	size--;
-
-	int child = parent;
+	int child = temp;
+	parent = (child)/2;
+	while((parent >=1) && (heap[parent-1]->data > heap[child-1]->data))
+	{
+		tempEdge = heap[child-1];
+		heap[child-1] = heap[parent-1];
+		heap[child-1]->indexInHeap = child - 1;
+		heap[parent-1] = tempEdge;
+		heap[parent-1]->indexInHeap = parent - 1;
+		child = parent;
+		parent = parent/2;
+	}
+	child = temp;
+	parent = temp;
 	while(2*parent <= size)
 	{
 		if(2*parent != size)
 		{
 			child = (heap[(2*parent)-1]->data <= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
-			if(heap[child-1]->data > heap[parent-1]->data)
+			if(heap[child-1]->data < heap[parent-1]->data)
 			{
 				tempEdge = heap[child -1];
 				heap[child - 1] = heap[parent - 1];
