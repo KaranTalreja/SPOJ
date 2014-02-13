@@ -59,9 +59,11 @@ public:
 	node* first;
 	node* second;
 	unsigned int   weight;
+	bool taken;
 	edge();
 	edge(node* first,node* second, unsigned int weight)
 	{
+		taken = false;
 		this->first = first;
 		this->second = second;
 		this->weight = weight;
@@ -98,6 +100,7 @@ int main()
 			(*Graph)[tempNodeEndVal] = tempNodeEnd;
 			(*Graph)[tempNodeStartVal] = tempNodeStart;
 		}
+		int Loop[2] = {},isValid=false;
 		for(int t = 0;t < 2 ;t++)
 		{
 			heapMin heap;
@@ -119,6 +122,8 @@ int main()
 					for(;iter!=Source->edges.end();++iter)
 					{
 						tempEdge = (*iter);
+						if(true == tempEdge->taken)
+							continue;
 						tempNodeEnd = tempEdge->second;
 						if((tempNodeEnd->explored == false))
 						{
@@ -136,26 +141,36 @@ int main()
 				}
 				else
 				{
-					cout<<"Graph Not Connected"<<endl;
+					//cout<<"Graph Not Connected"<<endl;
 					break;
 				}
 			}
 			vector<edge*> path;
-			cout<<(*Graph)[noOfNodes-1]->data<<endl;
+			if((*Graph)[noOfNodes-1]->explored == true)
+			{
+				isValid = true;
+				Loop[t] = (*Graph)[noOfNodes-1]->data;
+			}
+			if(t == 0)
+				isValid = false;
 			tempEdge = (*Graph)[noOfNodes - 1]->visitedBy;
+			tempEdge->taken=true;
 			while(tempEdge)
 			{
 				path.push_back(tempEdge);
 				tempEdge = tempEdge->first->visitedBy;
 				if(tempEdge)
+				{
 					tempEdge->second->taken = true;
+					tempEdge->taken=true;
+				}
 			}
-			for(int k=path.size();k > 0;k--)
+/*			for(int k=path.size();k > 0;k--)
 			{
 				cout<<path[k-1]->first->Id<<"-( "<<path[k-1]->weight<<" )->"<<path[k-1]->second->Id<<" ; ";
 				path.pop_back();
 			}
-			cout/*<<(*Graph)[0]->Id*/<<endl;
+			cout<<endl;*/
 
 			int NoOfNodes = (*Graph).size();
 			for(int i =0;i<NoOfNodes;i++)
@@ -163,12 +178,15 @@ int main()
 				if((*Graph)[i]->taken == false)
 				{
 					((*Graph)[i])->explored = false;
-					((*Graph)[i])->data = 10000000;
 				}
+					((*Graph)[i])->data = 10000000;
 			}
 			heap.clearHeap();
 		}
-
+		if(isValid==true)
+			cout<<Loop[0]+Loop[1]<<endl;
+		else
+			cout<<"Not Possible"<<endl;
 	}
 	return 0;
 }
