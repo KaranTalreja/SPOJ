@@ -29,6 +29,7 @@ public:
 	int getSize()
 	{return size;}
 	void freeHeap();
+	void clearHeap();
 	bool check(node*);
 };
 class node {
@@ -39,12 +40,16 @@ public:
 	int indexInHeap;
 	bool explored;
 	vector<edge*> edges;
+	edge* visitedBy;
+	bool taken;
 	node(int data,int Id)
 	{
 		this->data = data;
 		this->Id = Id;
 		indexInHeap = -1;
 		explored = false;
+		visitedBy = NULL;
+		taken = false;
 	}
 	node();
 };
@@ -76,7 +81,6 @@ int main()
 		inpLine(temp);
 		noOfNodes = getInt(&temp);
 		noOfEdges = getInt(&temp);
-		cout<<noOfNodes<<" "<<noOfEdges<<endl;
 		if(noOfNodes == 0 && noOfEdges == 0)
 			break;
 		Graph = new vector<node*>(noOfNodes);
@@ -87,7 +91,6 @@ int main()
 			tempNodeStartVal = getInt(&temp);
 			tempNodeEndVal =getInt(&temp);
 			weight = getInt(&temp);
-			cout<<tempNodeStartVal<<" "<<tempNodeEndVal<<" "<<weight<<endl;
 			tempNodeStart = (NULL == (*Graph)[tempNodeStartVal]) ? new node(10000000,tempNodeStartVal) : (*Graph)[tempNodeStartVal];
 			tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal]) ? new node(10000000,tempNodeEndVal) : (*Graph)[tempNodeEndVal];
 			tempEdge = new edge(tempNodeStart,tempNodeEnd,weight);
@@ -95,45 +98,77 @@ int main()
 			(*Graph)[tempNodeEndVal] = tempNodeEnd;
 			(*Graph)[tempNodeStartVal] = tempNodeStart;
 		}
-//		heapMin heap;
-//		node * Source = NULL;
-//		(*Graph)[0]->data = 0;
-//		heap.insert((*Graph)[0]);
-//		vector<edge*>::iterator iter;
-//		for(int i=0;i<noOfNodes;i++)
-//		{
-//			if(heap.getSize() > 0)
-//			{
-//				Source = heap.extractMin();
-//				heap.deleteNode(Source);
-//			}
-//			if(NULL != Source)
-//			{
-//				Source->explored = true;
-//				iter = Source->edges.begin();
-//				for(;iter!=Source->edges.end();++iter)
-//				{
-//					tempEdge = (*iter);
-//					tempNodeEnd = tempEdge->second;
-//					if((tempNodeEnd->explored == false))
-//					{
-//						if((Source->data + tempEdge->weight < tempNodeEnd->data))
-//						{
-//							if(tempNodeEnd -> indexInHeap >= 0)
-//								heap.deleteNode(tempNodeEnd);
-//							tempNodeEnd->data = Source->data + tempEdge->weight;
-//							heap.insert(tempNodeEnd);
-//						}
-//					}
-//				}
-//				Source = NULL;
-//			}
-//			else
-//			{
-//				cout<<"Graph Not Connected"<<endl;
-//				break;
-//			}
-//		}
+		for(int t = 0;t < 2 ;t++)
+		{
+			heapMin heap;
+			node * Source = NULL;
+			(*Graph)[0]->data = 0;
+			heap.insert((*Graph)[0]);
+			vector<edge*>::iterator iter;
+			for(int i=0;i<noOfNodes;i++)
+			{
+				if(heap.getSize() > 0)
+				{
+					Source = heap.extractMin();
+					heap.deleteNode(Source);
+				}
+				if(NULL != Source)
+				{
+					Source->explored = true;
+					iter = Source->edges.begin();
+					for(;iter!=Source->edges.end();++iter)
+					{
+						tempEdge = (*iter);
+						tempNodeEnd = tempEdge->second;
+						if((tempNodeEnd->explored == false))
+						{
+							if((Source->data + tempEdge->weight < tempNodeEnd->data))
+							{
+								if(tempNodeEnd -> indexInHeap >= 0)
+									heap.deleteNode(tempNodeEnd);
+								tempNodeEnd->data = Source->data + tempEdge->weight;
+								tempNodeEnd->visitedBy = tempEdge;
+								heap.insert(tempNodeEnd);
+							}
+						}
+					}
+					Source = NULL;
+				}
+				else
+				{
+					cout<<"Graph Not Connected"<<endl;
+					break;
+				}
+			}
+			vector<edge*> path;
+			cout<<(*Graph)[noOfNodes-1]->data<<endl;
+			tempEdge = (*Graph)[noOfNodes - 1]->visitedBy;
+			while(tempEdge)
+			{
+				path.push_back(tempEdge);
+				tempEdge = tempEdge->first->visitedBy;
+				if(tempEdge)
+					tempEdge->second->taken = true;
+			}
+			for(int k=path.size();k > 0;k--)
+			{
+				cout<<path[k-1]->first->Id<<"-( "<<path[k-1]->weight<<" )->"<<path[k-1]->second->Id<<" ; ";
+				path.pop_back();
+			}
+			cout/*<<(*Graph)[0]->Id*/<<endl;
+
+			int NoOfNodes = (*Graph).size();
+			for(int i =0;i<NoOfNodes;i++)
+			{
+				if((*Graph)[i]->taken == false)
+				{
+					((*Graph)[i])->explored = false;
+					((*Graph)[i])->data = 10000000;
+				}
+			}
+			heap.clearHeap();
+		}
+
 	}
 	return 0;
 }
@@ -308,4 +343,12 @@ bool heapMin::check(node* checkNode)
 		//cout<<"HEAP BREAKDOWN"<<endl;
 		return false;
 	}
+}
+void heapMin::clearHeap()
+{
+	for(vector<node*>::iterator itr = heap.begin();itr!=heap.end();itr++)
+	{
+		(*itr)->indexInHeap = -1;
+	}
+	heap.clear();
 }
