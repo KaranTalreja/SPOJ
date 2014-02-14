@@ -77,8 +77,10 @@ int main()
 	edge* tempEdge;
 	int tempNodeStartVal,tempNodeEndVal,weight;
 	char line[1000],*temp;
+	int noOfTestCases = 0;
 	while(1)
 	{
+		noOfTestCases++;
 		temp = line;
 		inpLine(temp);
 		noOfNodes = getInt(&temp);
@@ -100,93 +102,105 @@ int main()
 			(*Graph)[tempNodeEndVal] = tempNodeEnd;
 			(*Graph)[tempNodeStartVal] = tempNodeStart;
 		}
-		int Loop[2] = {},isValid=false;
+		bool isValid=true;int sum = 0;
 		for(int t = 0;t < 2 ;t++)
 		{
-			heapMin heap;
-			node * Source = NULL;
-			(*Graph)[0]->data = 0;
-			heap.insert((*Graph)[0]);
-			vector<edge*>::iterator iter;
-			for(int i=0;i<noOfNodes;i++)
+			if(isValid == true)
 			{
-				if(heap.getSize() > 0)
+				heapMin heap;
+				node * Source = NULL;
+				(*Graph)[0]->data = 0;
+				heap.insert((*Graph)[0]);
+				vector<edge*>::iterator iter;
+				int i=0;
+				while(i<noOfNodes && (*Graph)[noOfNodes-1]->explored == false )
 				{
-					Source = heap.extractMin();
-					heap.deleteNode(Source);
-				}
-				if(NULL != Source)
-				{
-					Source->explored = true;
-					iter = Source->edges.begin();
-					for(;iter!=Source->edges.end();++iter)
+					i++;
+					if(heap.getSize() > 0)
 					{
-						tempEdge = (*iter);
-						if(true == tempEdge->taken)
-							continue;
-						tempNodeEnd = tempEdge->second;
-						if((tempNodeEnd->explored == false))
+						Source = heap.extractMin();
+						heap.deleteNode(Source);
+					}
+					if(NULL != Source)
+					{
+						Source->explored = true;
+						iter = Source->edges.begin();
+						for(;iter!=Source->edges.end();++iter)
 						{
-							if((Source->data + tempEdge->weight < tempNodeEnd->data))
+							tempEdge = (*iter);
+							if(true == tempEdge->taken)
+								continue;
+							tempNodeEnd = tempEdge->second;
+							if((tempNodeEnd->explored == false))
 							{
-								if(tempNodeEnd -> indexInHeap >= 0)
-									heap.deleteNode(tempNodeEnd);
-								tempNodeEnd->data = Source->data + tempEdge->weight;
-								tempNodeEnd->visitedBy = tempEdge;
-								heap.insert(tempNodeEnd);
+								if((Source->data + tempEdge->weight < tempNodeEnd->data))
+								{
+									if(tempNodeEnd -> indexInHeap >= 0)
+										heap.deleteNode(tempNodeEnd);
+									tempNodeEnd->data = Source->data + tempEdge->weight;
+									tempNodeEnd->visitedBy = tempEdge;
+									heap.insert(tempNodeEnd);
+								}
 							}
 						}
+						Source = NULL;
 					}
-					Source = NULL;
+					else
+					{
+						//cout<<"Graph Not Connected"<<endl;
+						isValid = false;
+						break;
+					}
 				}
-				else
+				if(isValid == true)
 				{
-					//cout<<"Graph Not Connected"<<endl;
-					break;
-				}
-			}
-			vector<edge*> path;
-			if((*Graph)[noOfNodes-1]->explored == true)
-			{
-				isValid = true;
-				Loop[t] = (*Graph)[noOfNodes-1]->data;
-			}
-			if(t == 0)
-				isValid = false;
-			tempEdge = (*Graph)[noOfNodes - 1]->visitedBy;
-			tempEdge->taken=true;
-			while(tempEdge)
-			{
-				path.push_back(tempEdge);
-				tempEdge = tempEdge->first->visitedBy;
-				if(tempEdge)
-				{
-					tempEdge->second->taken = true;
+					vector<edge*> path;
+					if((*Graph)[noOfNodes-1]->explored == true)
+					{
+						isValid = true;
+						sum  += (*Graph)[noOfNodes-1]->data;
+					}
+					tempEdge = (*Graph)[noOfNodes - 1]->visitedBy;
 					tempEdge->taken=true;
-				}
-			}
-/*			for(int k=path.size();k > 0;k--)
+					while(tempEdge)
+					{
+						path.push_back(tempEdge);
+						tempEdge = tempEdge->first->visitedBy;
+						if(tempEdge)
+						{
+							tempEdge->second->taken = true;
+							tempEdge->taken=true;
+						}
+					}
+								for(int k=path.size();k > 0;k--)
 			{
 				cout<<path[k-1]->first->Id<<"-( "<<path[k-1]->weight<<" )->"<<path[k-1]->second->Id<<" ; ";
 				path.pop_back();
 			}
-			cout<<endl;*/
+			cout<<endl;
 
-			int NoOfNodes = (*Graph).size();
-			for(int i =0;i<NoOfNodes;i++)
-			{
-				if((*Graph)[i]->taken == false)
-				{
-					((*Graph)[i])->explored = false;
+					int NoOfNodes = (*Graph).size();
+					for(int i =0;i<NoOfNodes;i++)
+					{
+						if((*Graph)[i]->taken == false)
+						{
+							((*Graph)[i])->explored = false;
+						}
+						((*Graph)[i])->data = 10000000;
+						(*Graph)[i]->visitedBy = NULL;
+					}
+					heap.clearHeap();
 				}
-					((*Graph)[i])->data = 10000000;
 			}
-			heap.clearHeap();
 		}
-		if(isValid==true)
-			cout<<Loop[0]+Loop[1]<<endl;
+		if(isValid == true)
+		{
+			cout<<"Instance #"<<noOfTestCases<<":  "<<sum<<endl;
+		}
 		else
-			cout<<"Not Possible"<<endl;
+		{
+			cout<<"Instance #"<<noOfTestCases<<":  "<<"Not possible"<<endl;
+		}
 	}
 	return 0;
 }
