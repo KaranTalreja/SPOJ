@@ -14,11 +14,13 @@ int main()
 {
 	vector<char*> listOfWords;
 	listOfWords.push_back("THIS");
-	listOfWords.push_back("BOOK");
+	listOfWords.push_back("BOOO");
 	listOfWords.push_back("GOOD");
 	char* Acronym = "HOOD";
 	size_t lenOfAcr = strlen(Acronym);
 	vector<vector<vector<int> > > Cache;
+	vector<vector<vector<int> > > Count2;
+	vector<vector<int> > Count;
 	for(size_t i=0;i<=lenOfAcr;i++)
 	{
 		vector<vector<int> >tmp;
@@ -30,40 +32,63 @@ int main()
 			tmp.push_back(tmpVec);
 		}
 		Cache.push_back(tmp);
+		Count2.push_back(tmp);
+		Count.push_back(vector<int>(listOfWords.size()+1));
 	}
 
 	for(size_t i=1;i<Cache.size();i++)
 	{
 		for(size_t j=1;j<Cache[i].size();j++)
 		{
+			int multiply = 0;
 			for(size_t k=1;k<Cache[i][j].size();k++)
 			{
+
 				if(i == 1 && j == 1)
 				{
 					if(Acronym[i-1] == listOfWords[j-1][k-1])
 					{
 						Cache[i][j][k] = 1;
+						//Count[i][j] = 1;
+						multiply++;
+						Count2[i][j][k] = multiply;
 					}
 					else
 					{
 						Cache[i][j][k] = Cache[i][j][k-1];
+						Count2[i][j][k] = Count2[i][j][k-1];
 					}
 				}
 				else
 				{
 					if(Acronym[i-1] == listOfWords[j-1][k-1])
 					{
+						multiply++;
 						Cache[i][j][k] = Cache[i-1][j][k-1] || Cache[i-1][j-1].back();
+						Count2[i][j][k] += Count2[i-1][j][k-1] + Count2[i-1][j-1].back()*multiply ;
+						//multiply= multiply + Cache[i-1][j][k-1] + Cache[i-1][j-1].back();
 					}
 					else
 					{
 						Cache[i][j][k] = Cache[i][j][k-1];
+						Count2[i][j][k] = Count2[i][j][k-1];
 					}
 				}
 			}
+			//Count[i][j] = Count[i-1][j] == 0 ? multiply : Count[i-1][j] * multiply;
+			//Count[i][j] = Count[i-1][j-1];
 		}
 	}
 
+//		for(size_t i=0;i<Count.size();i++)
+//		{
+//			for(size_t j=0;j<Count[i].size();j++)
+//			{
+//
+//					cout<<Count2[i][j]<<" ";
+//			}
+//			cout<<endl;
+//		}
 
 
 	for(size_t i=0;i<Cache.size();i++)
@@ -74,14 +99,14 @@ int main()
 			for(size_t k=0;k<Cache[i][j].size();k++)
 			{
 
-				cout<<Cache[i][j][k]<<" ";
+				cout<<Count2[i][j][k]<<" ";
 			}
 			cout<<endl;
 		}
 		cout<<endl;
 	}
 
-	cout<<"!! "<<Cache[4][3].back()<<endl;
+	cout<<"!! "<<Cache.back().back().back()<<"!! !! "<<Count2.back().back().back()<<endl;
 	return 0;
 }
 inline int getInt(char **str)
