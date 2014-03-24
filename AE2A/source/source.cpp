@@ -3,53 +3,74 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <tr1/unordered_map>
 using namespace std;
 #define getcx getchar_unlocked
 inline void inp( int &n );//fast input function
 inline int getInt(char **str);
 inline void inpLine(char* str);
-int count[5001];
+float Solve(int n,int k);
+unsigned long long kMax = 1000000;
+tr1::unordered_map<unsigned long long,float> Cache;
+tr1::unordered_map<unsigned long long, float>::iterator CacheItr;
+pair<unsigned long long,float> tmpPair;
 int main()
 {
 	int testCases,n,k;
 	inp(testCases);
 	for(int i =0;i< testCases;i++)
 	{
+		//		Cache.clear();
 		inp(n);
 		inp(k);
-		vector<vector<int> > Cache(n , vector<int>(k+1));
-		for(int i=0;i<n;i++)
+		//kMax = k;
+		int i = 1;
+		for(int j=1;j<=6 ;j++)
 		{
-			for(int j=0;j<=k ;j++)
-			{
-				if(j>0 && j<=6)
-					Cache[i][j] = 1;
-			}
+			unsigned long long key = ((unsigned long long)i * kMax) + (unsigned long long)j;
+			tmpPair.first =key;
+			tmpPair.second = 1.0/6.0;
+			Cache.insert(tmpPair);
 		}
-		for(int i=1;i<n;i++)
-		{
-			for(int j=0;j<=k ;j++)
-			{
-				if( j > 1)
-					Cache[i][j] += Cache[i-1][j-1];
-				if( j > 2)
-					Cache[i][j] += Cache[i-1][j-2];
-				if( j > 3)
-					Cache[i][j] += Cache[i-1][j-3];
-				if( j > 4)
-					Cache[i][j] += Cache[i-1][j-4];
-				if( j > 5)
-					Cache[i][j] += Cache[i-1][j-5];
-				if( j > 6)
-					Cache[i][j] += Cache[i-1][j-6];
-
-
-			}
-		}
-		cout<<Cache[n-1][k]<<endl;
+		cout << (unsigned int)(Solve(n,k) * 100.0)/* <<"\t "<< n<< " : "<<k*/<<endl;
 	}
+
 	return 0;
 }
+
+float Solve(int i,int j)
+{
+	float retVal = 0;
+	unsigned long long key = ((unsigned long long )i * kMax) + (unsigned long long )j;
+	if(j < 1 || i > j || j > 6*i)
+		return 0;
+	else
+	{
+		CacheItr = Cache.find(key);
+		if(Cache.end() != CacheItr)
+			return CacheItr->second;
+		else
+		{
+			if( j > 6)
+				retVal += (Solve(i-1,j-6) + Solve(i-1,j-5) + Solve(i-1,j-4) + Solve(i-1,j-3) + Solve(i-1,j-2) + Solve(i-1,j-1)) * 1/6;
+			else if( j > 5)
+				retVal += (Solve(i-1,j-5) + Solve(i-1,j-4) + Solve(i-1,j-3) + Solve(i-1,j-2) + Solve(i-1,j-1)) * 1/6;
+			else if( j > 4)
+				retVal += (Solve(i-1,j-4) + Solve(i-1,j-3) + Solve(i-1,j-2) + Solve(i-1,j-1)) * 1/6;
+			else if( j > 3)
+				retVal += (Solve(i-1,j-3) + Solve(i-1,j-2) + Solve(i-1,j-1)) * 1/6;
+			else if( j > 2)
+				retVal += (Solve(i-1,j-2) + Solve(i-1,j-1)) * 1/6;
+			else if( j > 1)
+				retVal += (Solve(i-1,j-1) * 1/6);
+			tmpPair.first =key;
+			tmpPair.second = retVal;
+			Cache.insert(tmpPair);
+		}
+	}
+	return retVal;
+}
+
 inline int getInt(char **str)
 {
 	char ch = **str;int sign=1;
